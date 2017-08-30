@@ -14,14 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /*
  * NOTE : =============================================================
@@ -484,13 +477,39 @@ public class AddressBook {
      */
     private static ArrayList<String[]> getPersonsWithNameContainingAnyKeyword(Collection<String> keywords) {
         final ArrayList<String[]> matchedPersons = new ArrayList<>();
+        keywords = toLower(keywords);
         for (String[] person : getAllPersonsInAddressBook()) {
-            final Set<String> wordsInName = new HashSet<>(splitByWhitespace(getNameFromPerson(person)));
+            final Set<String> wordsInName = toLower(new HashSet<>(splitByWhitespace(getNameFromPerson(person))));
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
         }
         return matchedPersons;
+    }
+
+    private static Set<String> toLower(Set<String> texts) {
+        final Set<String> lowerCases = new HashSet<String>();
+        Iterator<String> iterator = texts.iterator();
+        while(iterator.hasNext()){
+            lowerCases.add(iterator.next().toLowerCase());
+        }
+
+        return lowerCases;
+    }
+
+    private static Collection<String> toLower(Collection<String> texts) {
+        final ArrayList lowerCases = new ArrayList<String>();
+
+        Iterator<String> iterator = texts.iterator();
+        while(iterator.hasNext()){
+            lowerCases.add(iterator.next().toLowerCase());
+        }
+
+        return lowerCases;
+    }
+
+    private static String toLower(String text) {
+        return text.toLowerCase();
     }
 
     /**
